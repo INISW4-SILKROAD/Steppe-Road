@@ -5,11 +5,11 @@ from preprocessor.custom_preprocessor import CustomPreprosessor
 
 # 모델 정의
 class CustomMobileNet(nn.Module):
-    def __init__(self, input = 512):
+    def __init__(self, input = 512, num_class = 5):
         super(CustomMobileNet, self).__init__()
         self.input_preprocessor = CustomPreprosessor(input)
         self.mobilenet = models.mobilenet_v3_small(pretrained=True)
-        self.mobilenet.classifier[3] = nn.Linear(self.mobilenet.classifier[3].in_features, 4)
+        self.mobilenet.classifier[3] = nn.Linear(self.mobilenet.classifier[3].in_features, num_class)
         
     def forward(self, x):
         x = self.input_preprocessor(x)
