@@ -17,7 +17,7 @@ from imagebind.models.transformer import MultiheadAttention, SimpleTransformer
 from imagebind.models.helpers import (EinOpsRearrange, LearnableLogitScaling, Normalize,
                             SelectElement, SelectEOSAndProject)
 
-from encoder.imagebind.custom_mp import (PadIm2Video,
+from encoder.custom_multimodal_encoder.custom_mp import (PadIm2Video,
                         PatchEmbedGeneric,
                         RGBDTPreprocessor,
                         SpatioTemporalPosEmbeddingHelper,
