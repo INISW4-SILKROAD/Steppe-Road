@@ -1,7 +1,7 @@
 import torch.nn as nn
 import torch
 import torchvision.models as models
-from custom_preprocessor import CustomPreprosessor
+from preprocessor.custom_preprocessor import CustomPreprosessor
 
 # 모델 정의
 class CustomMobileNet(nn.Module):
