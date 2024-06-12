@@ -288,7 +288,7 @@ def cibm_pretrained(out_embed_dim = 1024):
         out_embed_dim=out_embed_dim
     )
 
-    weight_path = f".checkpoints/cibm_pretrained_{out_embed_dim}.pth"
+    weight_path = f".checkpoints/pretrained_cibm_{out_embed_dim}.pth"
     if not os.path.exists(weight_path):
         print('WARNING: no checkpoint exist - cant load weight')
         return None

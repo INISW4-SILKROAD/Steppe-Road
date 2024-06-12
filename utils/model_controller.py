@@ -1,7 +1,7 @@
 import torch , os
 from tqdm import tqdm
 
-def freeze_model(model, parent= '', exception = []):
+def freeze_model(model, parent= '',* , exception = []):
     for name, child in model.named_children():
         if name in exception:
             for n, param in child.named_parameters():
