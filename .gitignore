@@ -2,4 +2,7 @@
 *.pth
 *.pkl
 *.gz
+*.log
 /data/
+/dataset/
+weight_edit.ipynb

@@ -242,7 +242,7 @@ class CustomImageBindModel(nn.Module):
     def forward(self, inputs):
         outputs = {}
         for modality_key, modality_value in inputs.items():
-
+            
             reduce_list = (
                 modality_value.ndim >= 5
             )
