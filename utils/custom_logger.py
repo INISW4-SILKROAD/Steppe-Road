@@ -19,4 +19,5 @@ def get_logger(name = 'my_logger' ):
     # 로거에 핸들러 추가
     #logger.addHandler(ch)
     logger.addHandler(fh)
+    logger.info('START_LOGGING========================================================')
     return logger
