@@ -1,26 +1,17 @@
-#!/usr/bin/env python3
-# Portions Copyright (c) Meta Platforms, Inc. and affiliates.
-# All rights reserved.
-
-# This source code is licensed under the license found in the
-# LICENSE file in the root directory of this source tree.
-
-
 import os
 from functools import partial
-from types import SimpleNamespace
 
 import torch
 import torch.nn as nn
 
 from imagebind.models.transformer import MultiheadAttention, SimpleTransformer
-from imagebind.models.helpers import (EinOpsRearrange, LearnableLogitScaling, Normalize,
-                            SelectElement, SelectEOSAndProject)
+from imagebind.models.helpers import (EinOpsRearrange, Normalize,
+                            SelectElement)
 
-from encoder.custom_multimodal_encoder.custom_mp import (PadIm2Video,
-                        PatchEmbedGeneric,
-                        RGBDTPreprocessor,
-                        SpatioTemporalPosEmbeddingHelper)
+from imagebind.models.multimodal_preprocessors import (PadIm2Video,
+                                             PatchEmbedGeneric,
+                                             RGBDTPreprocessor,
+                                             SpatioTemporalPosEmbeddingHelper)
 
 
 class CustomIbvisEncoder(nn.Module):

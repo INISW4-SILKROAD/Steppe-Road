@@ -5,4 +5,7 @@
 *.log
 /data/
 /dataset/
+/bpe/
+/.checkpoints/
 weight_edit.ipynb
+/__pycache__/

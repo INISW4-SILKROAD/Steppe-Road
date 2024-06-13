@@ -1,8 +1,9 @@
 import torch.nn as nn
 
 # imagebind
-import encoder.custom_ibvis_encoder as cibv
 import models.encoder.simple_ae as cae
+import models.encoder.custom_ibvis_encoder as cibv
+
 
 class Constantinople(nn.Module):
     def __init__(self, latent_dim = 512, portion_dim = 12, touch_dim = 4):
@@ -38,7 +39,7 @@ class Constantinople(nn.Module):
         portion = self.portion_encoder(portion)
         
         latent = self.polling(vision, portion)
-        latent = self.postprocess(latent)
+        #latent = self.postprocess(latent)
         
         result = self.touch_decoder(latent)
         return result

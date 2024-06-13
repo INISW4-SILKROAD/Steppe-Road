@@ -4,7 +4,7 @@ import torch.nn as nn
 import models.encoder.simple_ae as cae
 
 class ConstantinoplePost(nn.Module):
-    def __init__(self, latent_dim = 512, portion_dim = 12, touch_dim = 4):
+    def __init__(self, latent_dim = 512, portion_dim = 12):
         super(ConstantinoplePost, self).__init__()
         self.portion_encoder = cae.SimpleAE(
             input_dim=portion_dim, 

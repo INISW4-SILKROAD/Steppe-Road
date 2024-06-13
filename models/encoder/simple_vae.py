@@ -1,6 +1,5 @@
 import torch
 import torch.nn as nn
-import torch.optim as optim
 import torch.nn.functional as F
 from torch.nn.modules.loss import _Loss
 from torch import Tensor
@@ -22,12 +21,12 @@ class SimpleVAE(nn.Module):
         
         # 디코더 정의
         self.decoder = nn.Sequential(
-            SimpleAE(
-                input_dim=input_dim, 
-                hidden_dim=hidden_dim, 
-                latent_dim=latent_dim
-            ).decoder,
+            nn.Linear(latent_dim, hidden_dim),
+            nn.BatchNorm1d(hidden_dim),
+            nn.GELU(),
             nn.Linear(hidden_dim, input_dim),
+            nn.BatchNorm1d(input_dim),
+            nn.GELU()
         )
     
     def encode(self, x):
