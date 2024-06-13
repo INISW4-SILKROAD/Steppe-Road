@@ -8,7 +8,7 @@ from torch import Tensor
 from simple_ae import SimpleAE
 
 class SimpleVAE(nn.Module):
-    def __init__(self, input_dim, hidden_dim, latent_dim):
+    def __init__(self, input_dim = 4, hidden_dim= 1024, latent_dim=512):
         super(SimpleVAE, self).__init__()
         # 인코더 정의
         self.encoder = SimpleAE(
@@ -17,8 +17,8 @@ class SimpleVAE(nn.Module):
             latent_dim=latent_dim
             ).encoder
         
-        self.fc_mu = nn.Linear(hidden_dim, latent_dim)
-        self.fc_logvar = nn.Linear(hidden_dim, latent_dim)
+        self.fc_mu = nn.Linear(latent_dim, latent_dim)
+        self.fc_logvar = nn.Linear(latent_dim, latent_dim)
         
         # 디코더 정의
         self.decoder = nn.Sequential(
