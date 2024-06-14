@@ -90,8 +90,15 @@ def run_train_test_1_input(
 
                     all_preds.append(outputs.cpu())
                     all_targets.append(label.cpu())
+            # valid_loss 최솟값 저장
+            if test_loss < best_test_loss:
+                best_test_loss = test_loss
+                torch.save(model.state_dict(), path)
+                logger.info(f'UPDATE best_test_loss :{best_test_loss:.4f}')
 
-            score = calculate_accuracy(all_preds, all_targets)
+            logger.info(f'TOTAL RUN {epoch}/{num_epochs - 1}, Train_Loss: {train_loss:.4f},  Valid_Loss: {test_loss:.4f}')
+
+            score = calculate_accuracy(all_preds, all_targets, logger)
             test_loss = test_loss / len(test_loader.dataset)
             logger.info(f'Validation Loss: {test_loss:.4f}')
     
@@ -142,7 +149,7 @@ def run_train_test_2_input(
                 logger.info(f'UPDATE best_test_loss :{best_test_loss:.4f}')
 
             logger.info(f'TOTAL RUN {epoch}/{num_epochs - 1}, Train_Loss: {train_loss:.4f},  Valid_Loss: {test_loss:.4f}')
-            logger.info('f{score}')
+            logger.info(f'{score}')
             
     return best_test_loss, train_losses, test_losses
 
@@ -198,13 +205,13 @@ def _test_model_2(model, test_loader, criterion, logger, device):
             all_preds.append(outputs.cpu())
             all_targets.append(labels.cpu())
 
-    score = calculate_accuracy(all_preds, all_targets)
+    score = calculate_accuracy(all_preds, all_targets, logger)
     test_loss = test_loss / len(test_loader.dataset)
     logger.info(f'Validation Loss: {test_loss:.4f}')
     
     return test_loss, score
 
-def calculate_accuracy(all_preds, all_targets):
+def calculate_accuracy(all_preds, all_targets, logger):
     '''
     정확도를 계산합니다. 
     '''
@@ -212,7 +219,7 @@ def calculate_accuracy(all_preds, all_targets):
     labels = torch.cat(all_targets)
 
     TOUCH = ['softness', 'smoothness', 'thickness', 'flexibility']
-    total_count = [[(p[i] - l[i]).tolist() for p, l in zip(preds,labels)] for i in range(len(TOUCH))]
+    total_count = [[(p[i].round() - l[i]).tolist() for p, l in zip(preds,labels)] for i in range(len(TOUCH))]
     score = {}
 
     for index, touch in enumerate(total_count):
@@ -220,9 +227,9 @@ def calculate_accuracy(all_preds, all_targets):
         wrong = 0
 
         for i in touch: 
-            if i == 0 : correct += 1
-            else      : wrong   += 1
+            if i == 0. : correct += 1
+            else       : wrong   += 1
 
         score[TOUCH[index]] = correct / (correct+wrong)
-
+    logger.info(f'score: {score}')
     return score
