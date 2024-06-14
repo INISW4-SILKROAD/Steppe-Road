@@ -24,19 +24,24 @@ class:
             + 행렬곱
                 + 행렬 곱 - batch*512 + batch*512 > batch*512*512
                 + 단순 과정으로 학습대상 아님
-            + attention
-                + MultiheadAttention -  batch*512*512 > batch*512*512
-                + 학습
-            + normalize
-                + layerNorm - batch*512*512 > batch*512*512
-                + 학습
-            + repeat
-                + 3차원으로 증가 - batch*3*512*512 > batch*512*512
-                + 단순 과정으로 학습대상 아님
+                
             + classifier
-                + custom_mobilenet - batch*3*512*512 > batch*5
-                + 기존 mobilenet_v3_small 가중치 사용
-                + 분류 레이어만 5 class로 줄여 학습 
+                + AttentionClassifier batch*512*512 > batch*5
+                + 다중 촉감 학습의 용이성을 위해 클래스 분리
+                + 해당 모듈의 레이어 구조는 다음과 같음 
+                    + attention
+                        + MultiheadAttention -  batch*512*512 > batch*512*512
+                        + 학습
+                    + normalize
+                        + layerNorm - batch*512*512 > batch*512*512
+                        + 학습
+                    + repeat
+                        + 3차원으로 증가 - batch*3*512*512 > batch*512*512
+                        + 단순 과정으로 학습대상 아님
+                    + classifier
+                        + custom_mobilenet - batch*3*512*512 > batch*5
+                        + 기존 mobilenet_v3_small 가중치 사용
+                        + 분류 레이어만 5 class로 줄여 학습 
         + 기존 mobilenet_v3_small 가중치 사용
         + 인코더와 디코더 모두 미리 학습시켜 사용
         + encoder_normalize, attention, normalize, classifier 학습
@@ -50,25 +55,22 @@ import torch.nn as nn
 import clip
 
 # 자체 라이브러리
-import models.encoder.simple_ae as cae
-import models.classifier.custom_mobile_net as cmn
+from models.encoder.simple_ae import SimpleAE 
+from models.classifier.attetion_classifier import AttentionClassifier
 
 
 class  Kostantiniyye(nn.Module):
-    def __init__(self, latent_dim = 512, portion_dim = 12, num_heads=8, device='cpu'):
+    def __init__(self, latent_dim = 512, portion_dim = 12, device='cpu'):
         super(Kostantiniyye, self).__init__()
         self.image_encoder, self.preprocessor = clip.load("ViT-B/32", device=device)
         
-        self.portion_encoder = cae.SimpleAE(
+        self.portion_encoder = SimpleAE(
             input_dim=portion_dim,
             latent_dim=latent_dim
             ).encoder
         self.encoder_normalize = nn.LayerNorm(latent_dim)
         
-        self.attention = nn.MultiheadAttention(latent_dim, num_heads)
-        self.normalize = nn.LayerNorm(latent_dim)
-        
-        self.classifier = cmn.CustomMobileNet(5)
+        self.classifier = AttentionClassifier(5, latent_dim, 8)
 
     def forward(self, vision, portion):
         # 각각 인코딩 후 안정화 - clip은 모델 끝에서 안정화 시키기에 추가로 할 필요 없음
@@ -76,20 +78,10 @@ class  Kostantiniyye(nn.Module):
         portion = self.portion_encoder(portion)
         portion = self.encoder_normalize(portion)
         
-        # 어텐션 적용 후 노멀라이즈
+        # 행렬 곱
         embed = vision.unsqueeze(2)  * portion.unsqueeze(1) 
-        batch_size, h, w = embed.size()
-        embed = embed.permute(1, 0, 2)  
-        
-        attn_output, _ = self.attention(embed, embed, embed)
-        
-        attn_output = attn_output.permute(1, 0, 2)  
-        attn_output = attn_output.view(batch_size, h, w)
-    
-        x = self.normalize(attn_output)
-        
-        # 채널 증폭 후 모바일넷    
-        x = x.unsqueeze(1).repeat(1, 3, 1, 1)
-        result = self.classifier(x)
+
+        # 어텐션 적용 후 노멀라이즈
+        result = self.classifier(embed)
         
         return result

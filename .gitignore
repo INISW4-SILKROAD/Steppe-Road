@@ -8,4 +8,5 @@
 /bpe/
 /.checkpoints/
 weight_edit.ipynb
+freezed_model_maker
 /__pycache__/
