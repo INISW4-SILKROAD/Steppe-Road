@@ -244,26 +244,23 @@ def _test_model_2(model, test_loader, criterion, logger, device):
     
     return test_loss, score
 
-def calculate_accuracy(all_preds, all_targets, logger):
+def calculate_accuracy(all_preds, all_targets):
     '''
-    정확도를 계산합니다. 
+    정확도를 계산합니다.
     '''
     preds = torch.cat(all_preds)
     labels = torch.cat(all_targets)
 
-    TOUCH = ['softness', 'smoothness', 'thickness', 'flexibility']
-    total_count = [[(p[i].round() - l[i]).tolist() for p, l in zip(preds,labels)] for i in range(len(TOUCH))]
-    score = {}
+    total_count = [(p - l).tolist() for p, l in zip(preds.max(dim=1)[1],labels)]
+    correct = 0
+    wrong = 0
 
-    for index, touch in enumerate(total_count):
-        correct = 0
-        wrong = 0
+    for i in total_count:
+        if i == 0. : correct += 1
+        else       : wrong   += 1
 
-        for i in touch: 
-            if i == 0. : correct += 1
-            else       : wrong   += 1
+    score= correct / (correct+wrong)
 
-        score[TOUCH[index]] = correct / (correct+wrong)
     return score
 
 def save_result(results, path):
