@@ -1,3 +1,18 @@
+'''
+custom_ibvisv_encoder.py
+imagebnd의 비전 인코더
+
+class:
+    CustomIbvisEncoder: 
+        imagebind의 비전인코더를 별도로 구현
+
+function:
+    cibv_pretrained:
+        기존 가중치를 가져온 모델을 불러옴. 없다면 None 반환
+        가중치는 imagebind에서 추출함(호홤 안됨)
+
+작성자: 윤성진
+'''
 import os
 from functools import partial
 
@@ -15,6 +30,10 @@ from imagebind.models.multimodal_preprocessors import (PadIm2Video,
 
 
 class CustomIbvisEncoder(nn.Module):
+    '''
+    CustomIbvisEncoder
+    imagebind에서 별도로 분리 구현한 비전 인코더 모델
+    '''
     def __init__(
         self,
         kernel_size=(2, 14, 14),
@@ -139,6 +158,10 @@ class CustomIbvisEncoder(nn.Module):
 
 
 def cibv_pretrained(out_embed_dim = 512):
+    '''
+    최종 임베딩 차원을 받으면 기존 가중치를 가지는 인코더 모델을 반환하는 함수
+    최종 임베딩 차원을 지정해야 함 - 지정한 값에 따라 모델이 미세하지만 달라짐
+    '''
     model = CustomIbvisEncoder(
         vision_embed_dim=1280,
         vision_num_blocks=32,
@@ -158,34 +181,24 @@ def cibv_pretrained(out_embed_dim = 512):
 
 if __name__ == '__main__':
     from imagebind import data
-    from custom_ib_model import ModalityType
     import pickle
 
     device = "cuda:0" if torch.cuda.is_available() else "cpu"
-    device
 
-    # Instantiate model
+    # 모델 불러온 뒤 GPU로 옮김 - 모델은 평가 모드로 설정
     model = cibv_pretrained(out_embed_dim=512)
     model.eval()
     model.to(device)
-    # torch.save(model.state_dict(), '.checkpoints/mibm_pretrained.pth')
-
+    
+    # 데이터 불러와사서 이미지 경로 추출
     with open('./data/data.pkl', 'rb') as f:
         input_data = pickle.load(f)
 
-    frac_list=list(input_data['fraction'].values())
-    touch_list=list(input_data['touch'].values())
     image_paths=input_data['image']
 
-    # Load data
-    inputs = {
-        ModalityType.TEXT : data.load_and_transform_text(frac_list, device),
-        ModalityType.TOUCH: data.load_and_transform_text(touch_list, device), 
-    }
-
+    # 이미지를 임베딩한 뒤 임베딩 차원으로 인코딩
+    inputs = data.load_and_transform_vision_data(image_paths, device)
     with torch.no_grad():
         embeddings = model(inputs)
 
-    print(
-    torch.softmax(embeddings[ModalityType.TEXT] @ embeddings[ModalityType.TOUCH].T, dim=-1), 
-    )
+    print(torch.softmax(embeddings))

@@ -1,3 +1,10 @@
+'''
+simple_vae.py
+간단한 변분오토인코더
+재현률이 낮아 폐기
+
+작성자: 윤성진
+'''
 import torch
 import torch.nn as nn
 import torch.nn.functional as F

@@ -1,3 +1,10 @@
+'''
+custom_logger.py
+로깅 세팅이 귀찮아서 후딱 만듬
+채널 핸들러 만들어 두긴 했는데 어차피 안쓰잖아? 한잔해 
+
+작성자: 윤성진
+'''
 import logging
 
 def get_logger(name = 'my_logger' ):
