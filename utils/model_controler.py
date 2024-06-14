@@ -7,6 +7,7 @@ model_controler.py
 
 작성자: 윤성진
 '''
+import pickle
 
 import torch, os
 from tqdm import tqdm
@@ -264,3 +265,19 @@ def calculate_accuracy(all_preds, all_targets, logger):
 
         score[TOUCH[index]] = correct / (correct+wrong)
     return score
+
+def save_result(results, path):
+    best_test_loss, train_losses, test_losses = [], [], []
+    for i in results:
+        best_test_loss.append(i[0])
+        train_losses += i[1]
+        test_losses += i[2]
+    with open(path, 'wb') as f:
+        pickle.dump(
+            {
+                'best_test_loss': best_test_loss,
+                'train_losses': train_losses,
+                'test_losses': test_losses
+            }, f)
+        
+    return best_test_loss, train_losses, test_losses
