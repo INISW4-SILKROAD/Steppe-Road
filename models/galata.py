@@ -24,19 +24,22 @@ from PIL import Image
 
 import clip
 
-from models.encoder.simple_ae import SimpleAE
+from imagebind.data import load_and_transform_vision_data
+from models.encoder.simple_gelu_ae import SimpleGELUEAE
 
 from models.classifier.attetion_classifier import AttentionClassifier
 
 class Galata(nn.Module):
 
             
-    def __init__(self, latent_dim = 512, portion_dim = 12, num_heads=8, device='cpu'):
+    def __init__(self, latent_dim = 512, portion_dim = 12, device='cpu'):
         super(Galata, self).__init__()
         self.device = device
-        self.image_encoder, self.preprocessor = clip.load("ViT-B/32", device=device)
+        self.preprocessor = load_and_transform_vision_data
         
-        self.portion_encoder = SimpleAE(
+        clip, _= clip.load("ViT-B/32", device=device)
+        self.image_encder = clip.encode_image
+        self.portion_encoder = SimpleGELUEAE(
             input_dim=portion_dim,
             latent_dim=latent_dim
             ).encoder
@@ -50,8 +53,8 @@ class Galata(nn.Module):
     @torch.no_grad()
     def forward(self, image_path, portion):
         # 각각 인코딩 후 안정화 - clip은 모델 끝에서 안정화 시키기에 추가로 할 필요 없음
-        image = self.preprocessor(Image.open(image_path)).unsqueeze(0).to(self.device)
-        vision = self.image_encoder.encode_image(image)
+        image = self.preprocessor([image_path], self.device)
+        vision = self.image_encoder(image)
         portion = self.portion_encoder(portion)
         portion = self.encoder_normalize(portion)
 
