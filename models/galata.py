@@ -37,8 +37,8 @@ class Galata(nn.Module):
         self.device = device
         self.preprocessor = load_and_transform_vision_data
         
-        clip, _= clip.load("ViT-B/32", device=device)
-        self.image_encder = clip.encode_image
+        clip_, _= clip.load("ViT-B/32", device=device)
+        self.image_encoder = clip_.encode_image
         self.portion_encoder = SimpleGELUEAE(
             input_dim=portion_dim,
             latent_dim=latent_dim
@@ -55,6 +55,7 @@ class Galata(nn.Module):
         # 각각 인코딩 후 안정화 - clip은 모델 끝에서 안정화 시키기에 추가로 할 필요 없음
         image = self.preprocessor([image_path], self.device)
         vision = self.image_encoder(image)
+                
         portion = self.portion_encoder(portion)
         portion = self.encoder_normalize(portion)
 
@@ -66,4 +67,4 @@ class Galata(nn.Module):
         thickness = self.thickness(embed).max(dim=1)[1].tolist()[0]
         flexibility = self.flexibility(embed).max(dim=1)[1].tolist()[0]
         
-        return softness, smoothness, thickness, flexibility
+        return softness+1, smoothness+1, thickness+1, flexibility+1
