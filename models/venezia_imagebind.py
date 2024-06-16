@@ -51,7 +51,6 @@ class Venezia(nn.Module):
 
         self.classifier_ = CustomMobileNet(4)
         
-        
     def forward(self, x_1, x_2):
         # 이미지 인코딩
         x_1 = self.image_encoder(x_1)
@@ -68,7 +67,7 @@ class Venezia(nn.Module):
 
 def load_venezia_pretrain(out_embed_dim = 512):
     model = Venezia()
-    weight_path = f".checkpoints/pretrained_venezia_{out_embed_dim}.pth"
+    weight_path = f".checkpoints/pretrained_venezia_{out_embed_dim}_imagebind.pth"
     if not os.path.exists(weight_path):
         print('WARNING: no checkpoint exist - cant load weight')
         return None

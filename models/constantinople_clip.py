@@ -36,7 +36,10 @@ import models.encoder.simple_ae as cae
 class ConstantinopleClip(nn.Module):
     def __init__(self, latent_dim = 512, portion_dim = 12, touch_dim = 4, device = 'cpu'):
         super(ConstantinopleClip, self).__init__()
-        self.image_encoder, self.iamge_preprocesser = clip('ViT-B/32', device = device)
+        
+        clip_encoder, _ = clip.load("ViT-B/32", device=device)
+        
+        self.image_encoder = clip_encoder.encode_image        
         self.portion_encoder = cae.SimpleAE(
             input_dim=portion_dim, 
             latent_dim=latent_dim

@@ -62,9 +62,9 @@ class Galata(nn.Module):
         # 행렬 곱
         embed = vision.unsqueeze(2)  * portion.unsqueeze(1) 
         
-        softness = self.softness(embed).max(dim=1)[1].tolist()[0]
-        smoothness = self.smoothness(embed).max(dim=1)[1].tolist()[0]
-        thickness = self.thickness(embed).max(dim=1)[1].tolist()[0]
-        flexibility = self.flexibility(embed).max(dim=1)[1].tolist()[0]
+        softness = self.softness(embed)
+        smoothness = self.smoothness(embed)
+        thickness = self.thickness(embed)
+        flexibility = self.flexibility(embed)
         
-        return softness+1, smoothness+1, thickness+1, flexibility+1
+        return softness, smoothness, thickness, flexibility

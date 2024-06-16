@@ -11,7 +11,7 @@ class:
         + 레이어 정보
             + image_encoder 
                 + custum_ibvis_encoder - img > 1*512 피처벡터
-                + 기존 constantimople 가중치 사용
+                + 기존 constantinople 가중치 사용
             + portion_encoder:
                 + SimpleAE - 1*4 > 1*512
                 + 자체 학습시킨 가중치 사용
@@ -32,15 +32,19 @@ class:
 
 import torch.nn as nn
 
+# clip
+import clip
+
 # 자체 라이브러리
 import models.encoder.simple_ae as cae
-import models.encoder.custom_ibvis_encoder as cibv
 
 
 class ConstantinopleV2(nn.Module):
-    def __init__(self, latent_dim = 512, portion_dim = 12, touch_dim = 4):
+    def __init__(self, latent_dim = 512, portion_dim = 12, touch_dim = 4, device = 'cpu'):
         super(ConstantinopleV2, self).__init__()
-        self.image_encoder = cibv.CustomIbvisEncoder(out_embed_dim=latent_dim)
+        clip_encoder, _ = clip.load("ViT-B/32", device=device)
+        
+        self.image_encoder = clip_encoder.encode_image        
         self.portion_encoder = cae.SimpleAE(
             input_dim=portion_dim, 
             latent_dim=latent_dim
