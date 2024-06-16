@@ -42,14 +42,14 @@ class Venezia(nn.Module):
         super(Venezia, self).__init__()
         self.image_encoder = cibv.CustomIbvisEncoder(out_embed_dim=vision_embed_dim)
         self.polling = nn.Bilinear(vision_embed_dim, portion_dim, output_dim)
+        self.linear = nn.Linear(output_dim, 1*32*32)
         self.midprocessor = nn.Sequential(
-            nn.Linear(input, 1*32*32),
             nn.Conv2d(1, 3, kernel_size=3, stride=1, padding=1), 
             nn.BatchNorm2d(3), 
             nn.ReLU()
         )
 
-        self.classifier_ = CustomMobileNet(4)
+        self.classifier_ = CustomMobileNet(5)
         
     def forward(self, x_1, x_2):
         # 이미지 인코딩
@@ -57,17 +57,20 @@ class Venezia(nn.Module):
         
         # 피처 결합
         x = self.polling(x_1, x_2)
-        
+        batch_size = x.size(0)
+        x = self.linear(x)
+        x = x.view(batch_size, 1, 32, 32)
         # 이미지로 변환
-        x = self.preprocessor(x)
-        
+        x = self.midprocessor(x)
+
         # 분류
         result = self.classifier_(x)
         return result
 
-def load_venezia_pretrain(out_embed_dim = 512):
+
+def load_venezia_pretrain(path, out_embed_dim = 512):
     model = Venezia()
-    weight_path = f".checkpoints/pretrained_venezia_{out_embed_dim}_imagebind.pth"
+    weight_path = path
     if not os.path.exists(weight_path):
         print('WARNING: no checkpoint exist - cant load weight')
         return None

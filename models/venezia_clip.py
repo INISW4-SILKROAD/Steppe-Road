@@ -32,48 +32,48 @@ class:
 import torch
 import torch.nn as nn
 import os
-
-# clip - 다운 필요
 import clip
-
 # 자체 라이브러리
+import models.encoder.custom_ibvis_encoder as cibv
 from models.classifier.custom_mobile_net import CustomMobileNet
+from zmq import device
 
 class Venezia(nn.Module):
-    def __init__(self, vision_embed_dim = 512, portion_dim = 12, output_dim = 512, device = 'cpu'):
+    def __init__(self, vision_embed_dim = 512, portion_dim = 12, output_dim = 512, device='cpu'):
         super(Venezia, self).__init__()
-        
         clip_encoder, _ = clip.load("ViT-B/32", device=device)
         
-        self.image_encoder = clip_encoder.encode_image
+        self.image_encoder = clip_encoder.encode_image        
         self.polling = nn.Bilinear(vision_embed_dim, portion_dim, output_dim)
+        self.linear = nn.Linear(output_dim, 1*32*32)
         self.midprocessor = nn.Sequential(
-            nn.Linear(input, 1*32*32),
             nn.Conv2d(1, 3, kernel_size=3, stride=1, padding=1), 
             nn.BatchNorm2d(3), 
             nn.ReLU()
         )
 
-        self.classifier_ = CustomMobileNet(4)
-        
+        self.classifier_ = CustomMobileNet(5)
         
     def forward(self, x_1, x_2):
         # 이미지 인코딩
         x_1 = self.image_encoder(x_1)
         
         # 피처 결합
-        x = self.polling(x_1, x_2)
-        
+        x = self.polling(x_1.float(), x_2)
+        batch_size = x.size(0)
+        x = self.linear(x)
+        x = x.view(batch_size, 1, 32, 32)
         # 이미지로 변환
-        x = self.preprocessor(x)
-        
+        x = self.midprocessor(x)
+
         # 분류
         result = self.classifier_(x)
         return result
 
-def load_venezia_pretrain(out_embed_dim = 512):
-    model = Venezia()
-    weight_path = f".checkpoints/pretrained_venezia_{out_embed_dim}_clip.pth"
+
+def load_venezia_pretrain(path, out_embed_dim = 512, device = 'cpu'):
+    model = Venezia(device=device)
+    weight_path = path
     if not os.path.exists(weight_path):
         print('WARNING: no checkpoint exist - cant load weight')
         return None

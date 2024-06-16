@@ -67,4 +67,4 @@ class Galata(nn.Module):
         thickness = self.thickness(embed)
         flexibility = self.flexibility(embed)
         
-        return softness, smoothness, thickness, flexibility
+        return softness.max(dim = -1)[1].item(), smoothness.max(dim = -1)[1].item(), thickness.max(dim = -1)[1].item(), flexibility.max(dim = -1)[1].item()

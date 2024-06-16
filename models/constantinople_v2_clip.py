@@ -75,7 +75,7 @@ class ConstantinopleV2(nn.Module):
         portion = self.portion_encoder(portion)
         
         # 잠재공간 결합 및 안정화 
-        latent = self.polling(vision, portion)
+        latent = self.polling(vision.float(), portion)
         latent = self.midprocess(latent)
         
         # 촉감 디코딩

@@ -63,8 +63,7 @@ class ConstantinopleClip(nn.Module):
         portion = self.portion_encoder(portion)
         
         # 잠재 공간 결합 후 안정화
-        latent = self.polling(vision, portion)
-        latent = self.postprocess(latent)
+        latent = self.polling(vision.float(), portion)
         
         result = self.touch_decoder(latent)
         return result
