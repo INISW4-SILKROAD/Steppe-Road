@@ -31,10 +31,14 @@
   $ git clone https://github.com/INISW4-SILKROAD/Steppe-Road.git  
   cd Steppe-Road
   ```
-# 실행 방법
+## 실행 방법
 + Steppe-Road 폴더 안의 py또는 ipynb파일을 통해 실행해야 합니다. 
 + 다음 링크에서 가중치([galata.pth](https://drive.google.com/file/d/1hT9mEhn-OK1lPgtlu3R8clwsCvC-zgav/view?usp=sharing))를 다운받아 Steppe-Road 안에 넣어주세요
 + 다음과 같이 실행해주세요
+  + 이미지는 '원단'사진을 넣어주세요
+  + 혼용률은 비율에 따라 다음 순서에 맞추어 넣어주세요
+  + ["Cotton", "Polyester", "Acrylic", "Nylon", "Rayon", "Spandex", "Linen", "Polyurethane", "Modal", "Wool", "Tencel", "Acetate"]
+    + ex) cotton 50%, polyester 50% > [0.5, 0.5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]   
 ```python
 import torch
 from models.galata import Galata
