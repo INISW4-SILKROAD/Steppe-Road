@@ -8,12 +8,12 @@
 
 ---
 ## 모델 목록
-| 모델 명           | 이미지 인코더    | 혼용률 인코더          | 결합 방법                                                 | classifier         | 
+| 모델 명           | 이미지 인코더    | 혼용률 인코더          | 결합 방법(퓨전 레이어)                                     | classifier         | 
 | ----------------- | ---------------- | ---------------------- | --------------------------------------------------------- | -------------------|
 | venezia           | clip / imagebind |      x                 | 512 + 12  > 512 bilinear polling                          | movilenet_v3_small | 
 | constantinople    | clip / imagebind | simple_ae.encoder      | 512 + 512 > 512 bilinear polling                          | simple_ae.decoder  |
 | constantinople_v2 | clip / imagebind | simple_ae.encoder      | 512 + 512 > 512 bilinear polling + midprocess             | simple_ae.decoder  |
-| kostantiniyye     | clip / imagebind | simple_gelu_ae.encoder | 512 * 512 > 512*512 matrix multiply + attention           | movilenet_v3_small |
+| kostantiniyye     | clip / imagebind | simple_gelu_ae.encoder | 512 * 512 > 512*512 matrix multiply + attention + dropout | mobilenet_v3_small |
 | galata            | iamgebind        | simple_gelu_ae.encoder | 512 * 512 > 512*512 matrix multiply + attention + dropout | mobilenet          |
 ---
 ## 참고 사항
