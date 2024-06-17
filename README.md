@@ -34,8 +34,8 @@
 + 다음과 같이 실행해주세요
     + 이미지는 '원단'사진을 넣어주세요
     + 혼용률은 비율에 따라 다음 순서에 맞추어 넣어주세요
-    + ["Cotton", "Polyester", "Acrylic", "Nylon", "Rayon", "Spandex", "Linen", "Polyurethane", "Modal", "Wool", "Tencel", "Acetate"]
-        + ex) cotton 50%, polyester 50% > [0.5, 0.5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]   
+    + [ "Cotton" , "Polyester" , "Acrylic" , "Nylon" , "Rayon" , "Spandex" , "Linen" , "Polyurethane" , "Modal" , "Wool" , "Tencel" , "Acetate" ]
+        + ex) cotton 50%, polyester 50% > [ 0.5 , 0.5 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 , 0 ]   
       ```python
       import torch
       from models.galata import Galata
