@@ -1,7 +1,7 @@
 '''
 galata.py
 촉감 추정 모델(작동용)
-미리 학습시킨 4개 모델 통합버전
+미리 학습시킨 4개 모델 통합버전 - kostantiniyye_imagebind
 어텐션부터 각 촉감으로 갈라짐
 학습 불가능함. 명심할 것 - 배포용으로 만드는 파일.
 
@@ -13,7 +13,7 @@ class:
             + 모바일넷에 적용
         + 레이어 정보
             + kostatiniyye와 동일
-            + 어텐션부터 각 촉감을 지원
+            + 어텐션부터 나누어져 적용됨
 
 작성자: 윤성진
 '''
@@ -52,8 +52,9 @@ class Galata(nn.Module):
         # 각각 인코딩 후 안정화 - clip은 모델 끝에서 안정화 시키기에 추가로 할 필요 없음
         image = self.preprocessor([image_path], self.device)
         vision = self.image_encoder(image)
-                
-        portion = self.portion_encoder(portion)
+        
+        tenportion = torch.Tensor([portion]).to(self.device)
+        portion = self.portion_encoder(tenportion)
         portion = self.encoder_normalize(portion)
 
         # 행렬 곱
