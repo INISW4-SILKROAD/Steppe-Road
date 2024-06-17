@@ -47,7 +47,7 @@ class Venezia(nn.Module):
             nn.ReLU()
         )
 
-        self.classifier_ = CustomMobileNet(5)
+        self.classifier_ = CustomMobileNet(5) # 가져온 코드
         
     def forward(self, x_1, x_2):
         # 이미지 인코딩
