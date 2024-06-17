@@ -45,7 +45,6 @@ class:
 작성자: 윤성진
 '''
 
-from torch import dropout
 import torch.nn as nn
 
 # clip - 다운 받아야됨 
@@ -93,6 +92,7 @@ class  Kostantiniyye(nn.Module):
         attn_output = attn_output.view(batch_size, h, w)
 
         x = self.normalize(attn_output)
+        
         # 채널 증폭 후 모바일넷    
         x = x.unsqueeze(1).repeat(1, 3, 1, 1)
         x = self.dropout3(x)

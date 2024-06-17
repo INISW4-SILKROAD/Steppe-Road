@@ -20,13 +20,11 @@ class:
 
 import torch
 import torch.nn as nn
-from PIL import Image
 
-import clip
 
 from imagebind.data import load_and_transform_vision_data
 from models.encoder.simple_gelu_ae import SimpleGELUEAE
-
+from models.encoder.custom_ibvis_encoder import CustomIbvisEncoder
 from models.classifier.attetion_classifier import AttentionClassifier
 
 class Galata(nn.Module):
@@ -37,8 +35,7 @@ class Galata(nn.Module):
         self.device = device
         self.preprocessor = load_and_transform_vision_data
         
-        clip_, _= clip.load("ViT-B/32", device=device)
-        self.image_encoder = clip_.encode_image
+        self.image_encoder = CustomIbvisEncoder()
         self.portion_encoder = SimpleGELUEAE(
             input_dim=portion_dim,
             latent_dim=latent_dim
@@ -67,4 +64,11 @@ class Galata(nn.Module):
         thickness = self.thickness(embed)
         flexibility = self.flexibility(embed)
         
-        return softness.max(dim = -1)[1].item(), smoothness.max(dim = -1)[1].item(), thickness.max(dim = -1)[1].item(), flexibility.max(dim = -1)[1].item()
+        result = (
+            softness.max(dim = -1)[1].item(), 
+            smoothness.max(dim = -1)[1].item(), 
+            thickness.max(dim = -1)[1].item(), 
+            flexibility.max(dim = -1)[1].item()
+        )
+        
+        return result

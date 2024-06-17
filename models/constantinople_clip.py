@@ -2,6 +2,8 @@
 constantinople_clip.py
 촉감 추정 모델
 기존 constantinople의 clip인코더 버전
+기존 비전인코더+혼용률 벡터 -> 분류모델 구조 한계 극복 
+오토 인코더, Bilinear polling 등 결합
 
 class:
     ConstantinopleClip:
@@ -10,6 +12,7 @@ class:
             + image_encoder 
                 + clip - img > 1*512 피처벡터
                 + 기존 clip 가중치 사용  
+                + ***주의 클립은 입베딩 벡터를 float으로 바꿀 것
             + portion_encoder:
                 + SimpleAE - 1*4 > 1*512
                 + 자체 학습시킨 가중치 사용
