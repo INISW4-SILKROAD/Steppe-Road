@@ -29,3 +29,5 @@
   + [imagebind](https://github.com/facebookresearch/ImageBind?tab=readme-ov-file)는 기존 모델의 통합 인코더에서 비전 인코더를 분리하여 최종 임베딩 차원을 512차원으로 줄인것을 사용합니다.
   + 혼용률 인코더는 직접 모은 40000개의 혼용률 정보 중 중복을 제외한 2700여개의 데이터를 오토인코더를 통해 학습시킨 뒤, 인코더만 떼어 사용합니다.
  
+ + 기타
+   + kostantiniyye 중 인코더 명이 안붙은 모델은 드롭아웃이 없는 clip 기반 모델입니다.  
