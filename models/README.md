@@ -18,7 +18,8 @@
 ---
 ## 참고 사항
 + 가중치
-  + galata model의 가중치는 [여기](https://drive.google.com/file/d/1hT9mEhn-OK1lPgtlu3R8clwsCvC-zgav/view?usp=sharing)에서 얻을 수 있습니다. 
+  + galata model의 가중치는 [여기](https://drive.google.com/file/d/1hT9mEhn-OK1lPgtlu3R8clwsCvC-zgav/view?usp=sharing)에서 얻을 수 있습니다.
+    + 기타 다른 모델의 가중치는 [여기](https://drive.google.com/drive/folders/1CWV27MCpXmerGAHXKg9EHfnTT3vVz1O5?usp=sharing) 있습니다.  
   + clip, imagebind의 이미지 인코더와 mobilenet의 가중치는 기존 모델의 것을 그대로 사용했습니다.
     + imagebind의 경우, 마지막 레이어를 512개로 줄인 것을 사용합니다
     + mobilenet의 경우, 마지막 classifier의 4번째 레이어만 학습시킵니다
