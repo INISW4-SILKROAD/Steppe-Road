@@ -1,6 +1,6 @@
 '''
 custom_ibvisv_encoder.py
-imagebnd의 비전 인코더
+imagebnd의 비전 인코더 - 기존 imagebind의 인코더 코드중 비전 인코더와 관련된 내용만 추출함
 
 class:
     CustomIbvisEncoder: 
@@ -11,7 +11,7 @@ function:
         기존 가중치를 가져온 모델을 불러옴. 없다면 None 반환
         가중치는 imagebind에서 추출함(호홤 안됨)
 
-작성자: 윤성진
+// imagebind 코드에서 가져옴
 '''
 import os
 from functools import partial

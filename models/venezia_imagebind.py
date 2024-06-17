@@ -1,6 +1,6 @@
 '''
-venezia.py
-촉감 추정 모델
+venezia_imagebind.py
+촉감 추정 모델 - imagebind 기반
 혼용률과 이미지 피처 벡터를 결합할 때 단점 극복
 bilinear polling을 이용하여 균등한 결합 시도
 
@@ -29,9 +29,7 @@ class:
 작성자: 윤성진
 '''
 
-import torch
 import torch.nn as nn
-import os
 
 # 자체 라이브러리
 import models.encoder.custom_ibvis_encoder as cibv
@@ -66,14 +64,3 @@ class Venezia(nn.Module):
         # 분류
         result = self.classifier_(x)
         return result
-
-
-def load_venezia_pretrain(path, out_embed_dim = 512):
-    model = Venezia()
-    weight_path = path
-    if not os.path.exists(weight_path):
-        print('WARNING: no checkpoint exist - cant load weight')
-        return None
-
-    model.load_state_dict(torch.load(weight_path), strict=False)
-    return model

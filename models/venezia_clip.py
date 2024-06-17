@@ -1,6 +1,6 @@
 '''
-venezia.py
-촉감 추정 모델
+venezia_clip.py
+촉감 추정 모델 - clip 기반
 혼용률과 이미지 피처 벡터를 결합할 때 단점 극복
 bilinear polling을 이용하여 균등한 결합 시도
 
@@ -10,9 +10,9 @@ class:
         결합 이후 mobile_net으로 분류
         + 레이어 정보
             + image_encoder 
-                + custum_ibvis_encoder - img > 1*512 피처벡터
-                + 기존 imagebind 가중치 사용
-                + 마지막 레이어 학습
+                + clip.model.encode_image - img > 1*512 피처벡터
+                + 기존 clip 모델의 인코드 메소드 그대로 사용
+                + ***중요 출력 float 아님 - 반드시 vision에 float변환 해줄 것
             + polling: 
                 + bilinear polling - 1*512 + 1*12 > 1*512
                 + 학습
@@ -29,14 +29,13 @@ class:
 작성자: 윤성진
 '''
 
-import torch
 import torch.nn as nn
-import os
+
+# 클립 다운로드 필요
 import clip
+
 # 자체 라이브러리
-import models.encoder.custom_ibvis_encoder as cibv
 from models.classifier.custom_mobile_net import CustomMobileNet
-from zmq import device
 
 class Venezia(nn.Module):
     def __init__(self, vision_embed_dim = 512, portion_dim = 12, output_dim = 512, device='cpu'):
@@ -69,14 +68,3 @@ class Venezia(nn.Module):
         # 분류
         result = self.classifier_(x)
         return result
-
-
-def load_venezia_pretrain(path, out_embed_dim = 512, device = 'cpu'):
-    model = Venezia(device=device)
-    weight_path = path
-    if not os.path.exists(weight_path):
-        print('WARNING: no checkpoint exist - cant load weight')
-        return None
-
-    model.load_state_dict(torch.load(weight_path), strict=False)
-    return model

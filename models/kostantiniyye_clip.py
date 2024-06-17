@@ -1,5 +1,5 @@
 '''
-kostatiniyye_dropout.py
+kostatiniyye_clip.py
 촉감 추정 모델
 기존 kostatiniyye 모델의 과적합 문제 해결 시도
 드롭아웃을 어텐션 양쪽에 추가하여 과적합 방지
@@ -15,6 +15,7 @@ class:
             + image_encoder 
                 + clip - batch*img > batch*512
                 + 기존 clip 가중치 사용  
+                + ***중요 출력 float 아님 - 반드시 vision에 float변환 해줄 것
             + portion_encoder:
                 + SimpleAE - batch*4 > batch*512
                 + 자체 학습시킨 가중치 사용
@@ -55,9 +56,9 @@ from models.encoder.simple_gelu_ae import SimpleGELUEAE
 import models.classifier.custom_mobile_net as cmn
 
 
-class  KostantiniyyeDropout(nn.Module):
+class  Kostantiniyye(nn.Module):
     def __init__(self, latent_dim = 512, portion_dim = 12, num_heads=8, device='cpu'):
-        super(KostantiniyyeDropout, self).__init__()
+        super(Kostantiniyye, self).__init__()
         clip_encoder, _ = clip.load("ViT-B/32", device=device)
         
         self.image_encoder = clip_encoder.encode_image
@@ -76,7 +77,7 @@ class  KostantiniyyeDropout(nn.Module):
 
     def forward(self, vision, portion):
         # 각각 인코딩 후 안정화 - clip은 모델 끝에서 안정화 시키기에 추가로 할 필요 없음
-        vision = self.image_encoder.encode_image(vision)
+        vision = self.image_encoder(vision)
         portion = self.portion_encoder(portion)
         portion = self.encoder_normalize(portion)
         

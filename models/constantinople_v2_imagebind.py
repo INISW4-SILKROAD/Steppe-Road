@@ -1,5 +1,5 @@
 '''
-constantinople_v2.py
+constantinople_v2_imagebind.py
 촉감 추정 모델
 기존 constantinople의 불안정성 개선 
 결합된 latent space에 대해 midprocess로 안정화 
