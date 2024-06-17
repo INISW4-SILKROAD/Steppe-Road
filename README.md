@@ -15,14 +15,11 @@
   ```
 3. 참고 코드 클론
   + meta - [ImageBind](https://github.com/facebookresearch/ImageBind?tab=readme-ov-file)
-  + openai - [Clip](https://github.com/openai/CLIP)
   ```terminal
   $ git clone https://github.com/facebookresearch/ImageBind.git
   $ cd ImageBind
   $ pip install .
   $ cd ..
-  $ pip install ftfy regex tqdm
-  $ pip install git+https://github.com/openai/CLIP.git
   ```
   + 설치 안되는 경우, 아나콘다에서 cartropy 받기
 
@@ -55,4 +52,12 @@ model.eval()
 result = model('example/90.jpg', [ 0.0, 0.77, 0.0, 0.0, 0.18, 0.05, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
 print(result) #(3, 2, 2, 0)
 ```
-+ 또는 example.ipynb를 통해 실행할 수도 있습니다. 
++ 또는 example.ipynb를 통해 실행할 수도 있습니다.
+
+# 패키지로 실행 시
++ 위에서 구성한 환경에 추가로 clip 설치 필요
++ openai - [Clip](https://github.com/openai/CLIP)
+```terminal
+  $ pip install ftfy regex tqdm
+  $ pip install git+https://github.com/openai/CLIP.git
+```
