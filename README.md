@@ -17,12 +17,12 @@
   + meta - [ImageBind](https://github.com/facebookresearch/ImageBind?tab=readme-ov-file)
   + openai - [Clip](https://github.com/openai/CLIP)
   '''terminal
-  $ git clone https://github.com/facebookresearch/ImageBind.git
-  $ cd ImageBind
-  $ pip install .
-  $ cd ..
-  $ pip install ftfy regex tqdm
-  $ pip install git+https://github.com/openai/CLIP.git
+    $ git clone https://github.com/facebookresearch/ImageBind.git
+    $ cd ImageBind
+    $ pip install .
+    $ cd ..
+    $ pip install ftfy regex tqdm
+    $ pip install git+https://github.com/openai/CLIP.git
   '''
   + 설치 안되는 경우, 아나콘다에서 cartropy 받기
 
