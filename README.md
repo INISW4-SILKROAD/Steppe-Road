@@ -20,14 +20,14 @@
 
 2. 가상환경 생성 
 
-    ```terminal
+    ```bash
     $ conda create -n steppe-road python=3.8 pytorch==1.13.0 torchvision==0.14.0 torchaudio==0.13.0 pytorch-cuda=11.6 -c pytorch -c nvidia
     
     ```
 
 3. 참고 코드 클론
     + meta - [ImageBind](https://github.com/facebookresearch/ImageBind?tab=readme-ov-file)
-      ```terminal
+      ```bash
       $ git clone https://github.com/facebookresearch/ImageBind.git
       $ cd ImageBind
       $ pip install .
@@ -36,7 +36,7 @@
     + 설치 안되는 경우, 아나콘다에서 cartropy 받기
 
 4. git 레포 복사
-    ```terminal
+    ```bash
     $ git clone https://github.com/INISW4-SILKROAD/Steppe-Road.git  
     cd Steppe-Road
     ```
