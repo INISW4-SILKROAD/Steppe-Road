@@ -2,6 +2,7 @@
 *.pth
 *.pkl
 *.gz
+*.tgz
 *.log
 /data/
 /dataset/
