@@ -3,9 +3,12 @@
 *.pkl
 *.gz
 *.tgz
+*.zip
 *.log
+test.ipynb
 /data/
 /dataset/
+/datasets/
 /bpe/
 /.checkpoints/
 weight_edit.ipynb
