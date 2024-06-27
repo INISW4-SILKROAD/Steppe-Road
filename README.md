@@ -43,7 +43,7 @@
 ## 실행 방법
 + Steppe-Road 폴더 안의 py또는 ipynb파일을 통해 실행해야 합니다. 
 
-+ 다음 링크에서 가중치([galata.pth](https://drive.google.com/file/d/1hT9mEhn-OK1lPgtlu3R8clwsCvC-zgav/view?usp=sharing))를 다운받아 Steppe-Road 안에 넣어주세요
++ 다음 링크에서 가중치([galata.pth](https://1drv.ms/u/s!AhWRaXgnB9ovmfIjzXF3sq58XMY1IA?e=cnHsIh))를 다운받아 Steppe-Road 안에 넣어주세요
 
 + 다음과 같이 실행해주세요
   

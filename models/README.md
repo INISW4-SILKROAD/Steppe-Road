@@ -28,9 +28,9 @@
 
 + 가중치
 
-  + galata model의 가중치는 [여기](https://drive.google.com/file/d/1hT9mEhn-OK1lPgtlu3R8clwsCvC-zgav/view?usp=sharing)에서 얻을 수 있습니다.
+  + galata model의 가중치는 [여기](https://1drv.ms/u/s!AhWRaXgnB9ovmfIjzXF3sq58XMY1IA?e=cnHsIh)에서 얻을 수 있습니다.
   
-    + 기타 다른 모델의 가중치는 [여기](https://drive.google.com/drive/folders/1CWV27MCpXmerGAHXKg9EHfnTT3vVz1O5?usp=sharing) 있습니다.
+    + 기타 다른 모델의 가중치는 [여기](https://1drv.ms/f/s!AhWRaXgnB9ovmPd-okTjrdOuO4ZI1A?e=mHJA2f) 있습니다.
 
     + `load_state_dict`의 `strict=False` 옵션을 사용하면, 다른 모델의 가중치도 쉽게 불일 수 있습니다.
   
