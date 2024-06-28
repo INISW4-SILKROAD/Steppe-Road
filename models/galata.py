@@ -1,9 +1,9 @@
+
 '''
 galata.py
-촉감 추정 모델(작동용)
-미리 학습시킨 4개 모델 통합버전 - kostantiniyye_imagebind
+촉감 추정 모델
 어텐션부터 각 촉감으로 갈라짐
-학습 불가능함. 명심할 것 - 배포용으로 만드는 파일.
+학습 가능하게 변경
 
 class:
     Galata:
@@ -27,12 +27,11 @@ from models.encoder.simple_gelu_ae import SimpleGELUEAE
 from models.encoder.custom_ibvis_encoder import CustomIbvisEncoder
 from models.classifier.attetion_classifier import AttentionClassifier
 
-class Galata(nn.Module):
-
-            
+class Galata(nn.Module):         
     def __init__(self, latent_dim = 512, portion_dim = 12, device='cpu'):
         super(Galata, self).__init__()
         self.device = device
+        
         self.preprocessor = load_and_transform_vision_data
         
         self.image_encoder = CustomIbvisEncoder()
@@ -46,9 +45,28 @@ class Galata(nn.Module):
         self.smoothness = AttentionClassifier()
         self.thickness = AttentionClassifier()
         self.flexibility = AttentionClassifier()
+        
+        self.touch_classifier = {
+            'softness' : self.softness, 
+            'smoothness':self.smoothness, 
+            'thickness':self.thickness, 
+            'flexibility':self.flexibility
+            }
 
+    def forward(self, image, portion, touch):
+        vision = self.image_encoder(image)
+        portion = self.portion_encoder(portion)
+        portion = self.encoder_normalize(portion)
+
+        # 행렬 곱
+        embed = vision.unsqueeze(2)  * portion.unsqueeze(1) 
+        
+        touch = self.touch_classifier[touch](embed)
+        
+        return touch
+    
     @torch.no_grad()
-    def forward(self, image_path, portion):
+    def inference(self, image_path, portion):
         # 각각 인코딩 후 안정화 - clip은 모델 끝에서 안정화 시키기에 추가로 할 필요 없음
         image = self.preprocessor([image_path], self.device)
         vision = self.image_encoder(image)
@@ -73,3 +91,24 @@ class Galata(nn.Module):
         )
         
         return result
+    
+    def freeze(self, touch):
+        names = [
+            f'{touch}.attention.in_proj_weight', 
+            f'{touch}.attention.in_proj_bias',
+            f'{touch}.attention.out_proj.weight',
+            f'{touch}.attention.out_proj.bias',
+            f'{touch}.normalize.weight',
+            f'{touch}.normalize.bias', 
+            f'{touch}.classifier.mobilenet.classifier.0.weight',
+            f'{touch}.classifier.mobilenet.classifier.0.bias',
+            f'{touch}.classifier.mobilenet.classifier.3.weight',
+            f'{touch}.classifier.mobilenet.classifier.3.bias'
+            ]        
+    
+        for name, param in self.named_parameters():
+            if name in names:
+                param.requires_grad = True
+            else:
+                param.requires_grad = False
+        
